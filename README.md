@@ -37,12 +37,12 @@ npm install @mgcrea/fastify-session-prisma-store
 ## Quickstart
 
 ```ts
-import createFastify, { FastifyInstance, FastifyServerOptions } from 'fastify';
+import createFastify, {FastifyInstance, FastifyServerOptions} from 'fastify';
 import fastifyCookie from 'fastify-cookie';
 import PrismaStore from '@mgcrea/fastify-session-prisma-store';
 import fastifySession from '@mgcrea/fastify-session';
-import { prisma } from './config/prisma';
-import { IS_PROD, IS_TEST, REDIS_URI, SESSION_TTL } from './config/env';
+import {prisma} from './config/prisma';
+import {IS_PROD, IS_TEST, REDIS_URI, SESSION_TTL} from './config/env';
 
 const SESSION_TTL = 864e3; // 1 day in seconds
 
@@ -51,13 +51,21 @@ export const buildFastify = (options?: FastifyServerOptions): FastifyInstance =>
 
   fastify.register(fastifyCookie);
   fastify.register(fastifySession, {
-    store: new PrismaStore({ prisma }),
+    store: new PrismaStore({prisma}),
     secret: 'a secret with minimum length of 32 characters',
-    cookie: { maxAge: SESSION_TTL },
+    cookie: {maxAge: SESSION_TTL},
   });
 
   return fastify;
 };
+```
+
+## Debug
+
+You can use the `DEBUG` environment variable to toggle the [debug](https://github.com/debug-js/debug) output for this package:
+
+```sh
+DEBUG=fastify-session-prisma-store npm start
 ```
 
 ## Authors

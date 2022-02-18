@@ -1,18 +1,20 @@
 import {SessionData, SessionStore} from '@mgcrea/fastify-session';
 import {Prisma, PrismaClient} from '@prisma/client';
 import {EventEmitter} from 'events';
+import {debug} from 'src/utils';
 
 export type PrismaStoreOptions = {prisma: PrismaClient; ttl?: number};
 
-export const DEFAULT_TTL = 86400; // one day in seconds
+export const DEFAULT_TTL = 864e2; // one day in seconds
 
 export class PrismaStore<T extends SessionData = SessionData> extends EventEmitter implements SessionStore {
   private readonly ttl: number;
-  private readonly prisma: PrismaClient;
+  readonly #prisma: PrismaClient;
 
   constructor({prisma, ttl = DEFAULT_TTL}: PrismaStoreOptions) {
     super();
-    this.prisma = prisma;
+    debug(`new`, ttl);
+    this.#prisma = prisma;
     this.ttl = ttl;
   }
 
@@ -22,9 +24,10 @@ export class PrismaStore<T extends SessionData = SessionData> extends EventEmitt
 
   // This required method is used to upsert a session into the store given a session ID (sid) and session (session) object.
   async set(sessionId: string, sessionData: T, expiry?: number | null): Promise<void> {
+    debug(`set`, sessionId, sessionData, expiry);
     // const ttl = expiry ? Math.min(expiry - Date.now(), this.ttl) : this.ttl;
     const expires = this.getExpires(expiry);
-    await this.prisma.session.upsert({
+    await this.#prisma.session.upsert({
       create: {
         sid: sessionId,
         data: sessionData,
@@ -45,7 +48,8 @@ export class PrismaStore<T extends SessionData = SessionData> extends EventEmitt
 
   // This required method is used to get a session from the store given a session ID (id).
   async get(sessionId: string): Promise<[SessionData, number | null] | null> {
-    const value = await this.prisma.session.findUnique({
+    debug(`get`, sessionId);
+    const value = await this.#prisma.session.findUnique({
       where: {
         sid: sessionId,
       },
@@ -55,7 +59,8 @@ export class PrismaStore<T extends SessionData = SessionData> extends EventEmitt
 
   // This required method is used to destroy/delete a session from the store given a session ID (id).
   async destroy(sessionId: string): Promise<void> {
-    await this.prisma.session.delete({
+    debug(`destroy`, sessionId);
+    await this.#prisma.session.delete({
       where: {
         sid: sessionId,
       },
@@ -65,8 +70,9 @@ export class PrismaStore<T extends SessionData = SessionData> extends EventEmitt
 
   // This method is used to touch a session from the store given a session ID (id).
   async touch(sessionId: string, expiry?: number | null): Promise<void> {
+    debug(`touch`, sessionId, expiry);
     // const ttl = expiry ? Math.min(expiry - Date.now(), this.ttl) : this.ttl;
-    const session = await this.prisma.session.findUnique({
+    const session = await this.#prisma.session.findUnique({
       where: {
         sid: sessionId,
       },
@@ -75,7 +81,7 @@ export class PrismaStore<T extends SessionData = SessionData> extends EventEmitt
       return;
     }
     const expires = this.getExpires(expiry);
-    await this.prisma.session.update({
+    await this.#prisma.session.update({
       where: {
         sid: sessionId,
       },
