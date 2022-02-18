@@ -10,7 +10,7 @@
     "lint": "eslint src/ test/",
     "prettycheck": "prettier --check src/ test/",
     "typecheck": "tsc --noEmit",
-    "spec": "DEBUG=fastify-session-*,prisma-query jest --runInBand",
+    "spec": "DEBUG=fastify-session*,prisma-query jest --runInBand",
     "test": "npm run lint && npm run prettycheck && npm run typecheck && npm run spec",
     "prepublishOnly": "npm run build"
   },
@@ -42,6 +42,9 @@
   },
   "dependencies": {
     "debug": "^4.3.3"
+  },
+  "engines": {
+    "node": ">=12"
   },
   "keywords": [
     "prisma",

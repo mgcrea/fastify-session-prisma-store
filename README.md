@@ -31,7 +31,7 @@
 ## Install
 
 ```bash
-npm install @mgcrea/fastify-session-prisma-store
+npm install fastify-cookie @mgcrea/fastify-session @mgcrea/fastify-session-prisma-store
 ```
 
 ## Quickstart
@@ -42,7 +42,6 @@ import fastifyCookie from 'fastify-cookie';
 import PrismaStore from '@mgcrea/fastify-session-prisma-store';
 import fastifySession from '@mgcrea/fastify-session';
 import {prisma} from './config/prisma';
-import {IS_PROD, IS_TEST, REDIS_URI, SESSION_TTL} from './config/env';
 
 const SESSION_TTL = 864e3; // 1 day in seconds
 

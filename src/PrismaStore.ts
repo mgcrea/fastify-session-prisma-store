@@ -3,18 +3,22 @@ import {Prisma, PrismaClient} from '@prisma/client';
 import {EventEmitter} from 'events';
 import {debug} from 'src/utils';
 
-export type PrismaStoreOptions = {prisma: PrismaClient; ttl?: number};
+export type ExtraCreateInput<T extends SessionData = SessionData> = (data: T) => Partial<Prisma.SessionCreateInput>;
+
+export type PrismaStoreOptions<T> = {prisma: PrismaClient; ttl?: number; extra?: ExtraCreateInput<T>};
 
 export const DEFAULT_TTL = 864e2; // one day in seconds
 
 export class PrismaStore<T extends SessionData = SessionData> extends EventEmitter implements SessionStore {
   private readonly ttl: number;
+  readonly #extra?: ExtraCreateInput<T>;
   readonly #prisma: PrismaClient;
 
-  constructor({prisma, ttl = DEFAULT_TTL}: PrismaStoreOptions) {
+  constructor({prisma, ttl = DEFAULT_TTL, extra}: PrismaStoreOptions<T>) {
     super();
     debug(`new`, ttl);
     this.#prisma = prisma;
+    this.#extra = extra;
     this.ttl = ttl;
   }
 
@@ -27,16 +31,16 @@ export class PrismaStore<T extends SessionData = SessionData> extends EventEmitt
     debug(`set`, sessionId, sessionData, expiry);
     // const ttl = expiry ? Math.min(expiry - Date.now(), this.ttl) : this.ttl;
     const expires = this.getExpires(expiry);
+    const extra = this.#extra ? this.#extra(sessionData) : {};
     await this.#prisma.session.upsert({
       create: {
+        ...extra,
         sid: sessionId,
         data: sessionData,
-        // user: {connect: {id: sessionData.userId as number}},
         expires,
       },
       update: {
         data: sessionData,
-        // user: {connect: {id: sessionData.userId as number}},
         expires,
       },
       where: {
