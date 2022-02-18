@@ -4,7 +4,6 @@
   "description": "Prisma store for fastify-session",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "access": "public",
   "scripts": {
     "start": "npm run spec -- --watch",
     "build": "rimraf lib/*; tsc --build",
