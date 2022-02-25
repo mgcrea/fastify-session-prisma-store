@@ -1,7 +1,7 @@
 import {SessionData, SessionStore} from '@mgcrea/fastify-session';
 import {Prisma, PrismaClient} from '@prisma/client';
 import {EventEmitter} from 'events';
-import {debug} from 'src/utils';
+import {debug} from './utils';
 
 export type ExtraCreateInput<T extends SessionData = SessionData> = (data: T) => Partial<Prisma.SessionCreateInput>;
 
