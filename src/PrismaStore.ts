@@ -1,20 +1,26 @@
-import {SessionData, SessionStore} from '@mgcrea/fastify-session';
-import {Prisma, PrismaClient} from '@prisma/client';
-import {EventEmitter} from 'events';
-import {debug} from './utils';
+import type { SessionData, SessionStore } from "@mgcrea/fastify-session";
+import type { Prisma, PrismaClient } from "@prisma/client";
+import { EventEmitter } from "events";
+import { debug } from "./utils";
 
-export type ExtraCreateInput<T extends SessionData = SessionData> = (data: T) => Partial<Prisma.SessionCreateInput>;
+export type ExtraCreateInput<T extends SessionData = SessionData> = (
+  data: T
+) => Partial<Prisma.SessionCreateInput>;
 
-export type PrismaStoreOptions<T> = {prisma: PrismaClient; ttl?: number; extra?: ExtraCreateInput<T>};
+export type PrismaStoreOptions<T extends SessionData> = {
+  prisma: PrismaClient;
+  ttl?: number;
+  extra?: ExtraCreateInput<T>;
+};
 
 export const DEFAULT_TTL = 864e2; // one day in seconds
 
 export class PrismaStore<T extends SessionData = SessionData> extends EventEmitter implements SessionStore {
   private readonly ttl: number;
-  readonly #extra?: ExtraCreateInput<T>;
+  readonly #extra: ExtraCreateInput<T> | undefined;
   readonly #prisma: PrismaClient;
 
-  constructor({prisma, ttl = DEFAULT_TTL, extra}: PrismaStoreOptions<T>) {
+  constructor({ prisma, ttl = DEFAULT_TTL, extra }: PrismaStoreOptions<T>) {
     super();
     debug(`new`, ttl);
     this.#prisma = prisma;
@@ -58,7 +64,9 @@ export class PrismaStore<T extends SessionData = SessionData> extends EventEmitt
         sid: sessionId,
       },
     });
-    return value?.data ? [value.data as Prisma.JsonObject, value.expires ? value.expires.getTime() : null] : null;
+    return value?.data
+      ? [value.data as Prisma.JsonObject, value.expires ? value.expires.getTime() : null]
+      : null;
   }
 
   // This required method is used to destroy/delete a session from the store given a session ID (id).

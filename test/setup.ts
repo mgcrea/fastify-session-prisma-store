@@ -1,1 +1,1 @@
-import './utils/debug';
+import "./utils/debug";

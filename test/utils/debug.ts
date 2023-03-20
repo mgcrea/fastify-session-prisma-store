@@ -1,6 +1,6 @@
 /* eslint-disable no-var */
-import {inspect} from 'util';
-import {log} from 'console';
+import { log } from "console";
+import { inspect } from "util";
 
 declare global {
   var d: (...args: unknown[]) => void;
@@ -8,7 +8,9 @@ declare global {
 }
 
 globalThis.d = (...args: unknown[]) => {
-  setImmediate(() => log('🔴 ' + inspect(args.length > 1 ? args : args[0], {colors: true, depth: 10}) + '\n'));
+  setImmediate(() =>
+    log("🔴 " + inspect(args.length > 1 ? args : args[0], { colors: true, depth: 10 }) + "\n")
+  );
 };
 globalThis.dd = (...args: unknown[]) => {
   const error = new Error();

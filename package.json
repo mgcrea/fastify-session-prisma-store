@@ -2,49 +2,33 @@
   "name": "@mgcrea/fastify-session-prisma-store",
   "version": "0.4.0",
   "description": "Prisma store for fastify-session",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
-  "scripts": {
-    "start": "npm run spec -- --watch",
-    "build": "rimraf lib/*; tsc --build",
-    "lint": "eslint src/ test/",
-    "prettycheck": "prettier --check src/ test/",
-    "typecheck": "tsc --noEmit",
-    "spec": "DEBUG=fastify-session*,prisma-query jest --runInBand",
-    "test": "npm run lint && npm run prettycheck && npm run typecheck && npm run spec",
-    "prepublishOnly": "npm run build"
-  },
   "author": "Olivier Louvignes <olivier@mgcrea.io>",
   "repository": "github:mgcrea/fastify-session-prisma-store",
   "license": "MIT",
-  "devDependencies": {
-    "@mgcrea/fastify-session": "^0.16.0",
-    "@tsconfig/node12": "^1.0.10",
-    "@types/debug": "^4.1.7",
-    "@types/jest": "^28.1.1",
-    "@types/node": "^17.0.44",
-    "@typescript-eslint/eslint-plugin": "^5.28.0",
-    "@typescript-eslint/parser": "^5.28.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-jest": "^26.5.3",
-    "eslint-plugin-prettier": "^4.0.0",
-    "eslint": "^8.17.0",
-    "jest": "^28.1.1",
-    "prettier": "^2.7.0",
-    "prisma": "^3.15.2",
-    "rimraf": "^3.0.2",
-    "ts-jest": "^28.0.5",
-    "ts-node": "^10.8.1",
-    "typescript": "^4.7.3"
+  "type": "module",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
   },
-  "peerDependencies": {
-    "@prisma/client": ">=3"
-  },
-  "dependencies": {
-    "debug": "^4.3.4"
-  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "engines": {
     "node": ">=12"
+  },
+  "scripts": {
+    "start": "npm run spec -- --watch",
+    "build": "tsup --entry src/index.ts --format cjs,esm --sourcemap --dts --clean --entry src/bin/cli.ts",
+    "lint": "eslint src/ test/",
+    "prettycheck": "prettier --check src/ test/",
+    "prettify": "prettier --write src/ test/",
+    "typecheck": "tsc --noEmit",
+    "spec": "DEBUG=fastify-session* vitest --run",
+    "test": "npm run lint && npm run prettycheck && npm run typecheck && npm run spec",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "prisma",
@@ -52,5 +36,28 @@
     "fastify",
     "session",
     "auth"
-  ]
+  ],
+  "dependencies": {
+    "debug": "^4.3.4"
+  },
+  "peerDependencies": {
+    "@prisma/client": ">=3"
+  },
+  "devDependencies": {
+    "@mgcrea/eslint-config-node": "^0.2.3",
+    "@mgcrea/fastify-session": "^1.1.0",
+    "@prisma/client": "^4.11.0",
+    "@tsconfig/node-lts-strictest-esm": "^18.12.1",
+    "@types/debug": "^4.1.7",
+    "@types/node": "^18.15.3",
+    "benchmark": "^2.1.4",
+    "eslint": "^8.36.0",
+    "prettier": "^2.8.5",
+    "prettier-plugin-organize-imports": "^3.2.2",
+    "prisma": "^4.11.0",
+    "tsup": "^6.7.0",
+    "tsx": "^3.12.5",
+    "typescript": "^5.0.2",
+    "vitest": "^0.29.3"
+  }
 }
