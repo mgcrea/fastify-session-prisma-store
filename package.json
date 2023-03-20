@@ -19,6 +19,9 @@
   "engines": {
     "node": ">=12"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "start": "npm run spec -- --watch",
     "build": "tsup --entry src/index.ts --format cjs,esm --sourcemap --dts --clean --entry src/bin/cli.ts",
