@@ -22,6 +22,13 @@
   "files": [
     "dist"
   ],
+  "keywords": [
+    "prisma",
+    "postgresql",
+    "fastify",
+    "session",
+    "auth"
+  ],
   "scripts": {
     "start": "npm run spec -- --watch",
     "build": "tsup --entry src/index.ts --format cjs,esm --sourcemap --dts --clean --entry src/bin/cli.ts",
@@ -33,13 +40,6 @@
     "test": "npm run lint && npm run prettycheck && npm run typecheck && npm run spec",
     "prepublishOnly": "npm run build"
   },
-  "keywords": [
-    "prisma",
-    "postgresql",
-    "fastify",
-    "session",
-    "auth"
-  ],
   "dependencies": {
     "debug": "^4.3.4"
   },
@@ -53,7 +53,6 @@
     "@tsconfig/node-lts-strictest-esm": "^18.12.1",
     "@types/debug": "^4.1.7",
     "@types/node": "^18.15.3",
-    "benchmark": "^2.1.4",
     "eslint": "^8.36.0",
     "prettier": "^2.8.5",
     "prettier-plugin-organize-imports": "^3.2.2",
