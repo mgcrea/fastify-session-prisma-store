@@ -1,6 +1,6 @@
 {
   "name": "@mgcrea/fastify-session-prisma-store",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Prisma store for fastify-session",
   "author": "Olivier Louvignes <olivier@mgcrea.io>",
   "repository": "github:mgcrea/fastify-session-prisma-store",
