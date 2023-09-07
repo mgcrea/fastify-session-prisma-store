@@ -9,7 +9,7 @@ declare global {
 
 globalThis.d = (...args: unknown[]) => {
   setImmediate(() =>
-    log("🔴 " + inspect(args.length > 1 ? args : args[0], { colors: true, depth: 10 }) + "\n")
+    log("🔴 " + inspect(args.length > 1 ? args : args[0], { colors: true, depth: 10 }) + "\n"),
   );
 };
 globalThis.dd = (...args: unknown[]) => {

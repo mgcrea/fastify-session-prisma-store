@@ -4,7 +4,7 @@ import { EventEmitter } from "events";
 import { debug } from "./utils";
 
 export type ExtraCreateInput<T extends SessionData = SessionData> = (
-  data: T
+  data: T,
 ) => Partial<Prisma.SessionCreateInput>;
 
 export type PrismaStoreOptions<T extends SessionData> = {
