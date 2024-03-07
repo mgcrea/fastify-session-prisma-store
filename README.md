@@ -42,6 +42,19 @@ pnpm add fastify-cookie @mgcrea/fastify-session @mgcrea/fastify-session-prisma-s
 
 ## Quickstart
 
+Add the following table definition to your `schema.prisma`:
+
+```prisma
+model Session {
+  id        BigInt   @id @default(autoincrement()) @db.BigInt
+  sid       String   @unique
+  expires   DateTime
+  data      Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+```
+
 ```ts
 import createFastify, { FastifyInstance, FastifyServerOptions } from "fastify";
 import fastifyCookie from "fastify-cookie";
