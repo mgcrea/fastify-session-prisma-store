@@ -52,6 +52,7 @@ model Session {
   data      Json
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  @@map("sessions")
 }
 ```
 

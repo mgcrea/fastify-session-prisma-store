@@ -28,7 +28,7 @@ export class PrismaStore<T extends SessionData = SessionData> extends EventEmitt
     this.ttl = ttl;
   }
 
-  private getExpires(expiry?: number | null): Date {
+  private getExpiry(expiry?: number | null): Date {
     return new Date(expiry ?? Date.now() + this.ttl * 1000);
   }
 
@@ -36,18 +36,18 @@ export class PrismaStore<T extends SessionData = SessionData> extends EventEmitt
   async set(sessionId: string, sessionData: T, expiry?: number | null): Promise<void> {
     debug(`set`, sessionId, sessionData, expiry);
     // const ttl = expiry ? Math.min(expiry - Date.now(), this.ttl) : this.ttl;
-    const expires = this.getExpires(expiry);
+    const expiresAt = this.getExpiry(expiry);
     const extra = this.#extra ? this.#extra(sessionData) : {};
     await this.#prisma.session.upsert({
       create: {
         ...extra,
         sid: sessionId,
         data: sessionData,
-        expires,
+        expiresAt,
       },
       update: {
         data: sessionData,
-        expires,
+        expiresAt,
       },
       where: {
         sid: sessionId,
@@ -65,7 +65,7 @@ export class PrismaStore<T extends SessionData = SessionData> extends EventEmitt
       },
     });
     return value?.data
-      ? [value.data as Prisma.JsonObject, value.expires ? value.expires.getTime() : null]
+      ? [value.data as Prisma.JsonObject, value.expiresAt ? value.expiresAt.getTime() : null]
       : null;
   }
 
@@ -92,13 +92,13 @@ export class PrismaStore<T extends SessionData = SessionData> extends EventEmitt
     if (!session) {
       return;
     }
-    const expires = this.getExpires(expiry);
+    const expiresAt = this.getExpiry(expiry);
     await this.#prisma.session.update({
       where: {
         sid: sessionId,
       },
       data: {
-        expires,
+        expiresAt,
       },
     });
     return;

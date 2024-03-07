@@ -13,8 +13,10 @@ datasource db {
 model Session {
   id        BigInt   @id @default(autoincrement()) @db.BigInt
   sid       String   @unique
-  expires   DateTime
+
   data      Json
+
+  expiresAt DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
