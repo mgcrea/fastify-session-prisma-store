@@ -18,5 +18,5 @@ model Session {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("tbEts_Session")
+  @@map("sessions")
 }
