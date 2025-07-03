@@ -48,10 +48,13 @@ Add the following table definition to your `schema.prisma`:
 model Session {
   id        BigInt   @id @default(autoincrement()) @db.BigInt
   sid       String   @unique
-  expires   DateTime
+
   data      Json
+
+  expiresAt DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
   @@map("sessions")
 }
 ```
