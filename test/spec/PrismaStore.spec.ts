@@ -24,8 +24,8 @@ describe("PrismaStore", () => {
     expect(result).toBeUndefined();
     const sessionData = await getSessionWithId(context.get("id"));
     expect(sessionData.data).toEqual(context.get("data"));
-    expect(sessionData.expires).toBeInstanceOf(Date);
-    expect(sessionData.expires.getTime()).toBeLessThan(Date.now() + TTL * 1000);
+    expect(sessionData.expiresAt).toBeInstanceOf(Date);
+    expect(sessionData.expiresAt.getTime()).toBeLessThan(Date.now() + TTL * 1000);
   });
 
   it("should properly set a key with a shorter expiry", async () => {
@@ -33,8 +33,8 @@ describe("PrismaStore", () => {
     expect(result).toBeUndefined();
     const sessionData = await getSessionWithId(context.get("id"));
     expect(sessionData.data).toEqual(context.get("data"));
-    expect(sessionData.expires).toBeInstanceOf(Date);
-    expect(sessionData.expires.getTime()).toBeLessThan(Date.now() + SHORT_TTL * 1000);
+    expect(sessionData.expiresAt).toBeInstanceOf(Date);
+    expect(sessionData.expiresAt.getTime()).toBeLessThan(Date.now() + SHORT_TTL * 1000);
   });
 
   it("should properly get a key", async () => {
@@ -55,20 +55,20 @@ describe("PrismaStore", () => {
   it("should properly touch a key", async () => {
     await store.set(context.get("id"), context.get("data"));
     await waitFor(WAIT_FOR);
-    const { expires: beforeExpires } = await getSessionWithId(context.get("id"));
+    const { expiresAt: beforeExpiresAt } = await getSessionWithId(context.get("id"));
     const result = await store.touch(context.get("id"));
     expect(result).toBeUndefined();
-    const { expires: afterExpires } = await getSessionWithId(context.get("id"));
-    expect(afterExpires.getTime()).toBeGreaterThan(beforeExpires.getTime() + WAIT_FOR);
+    const { expiresAt: afterExpiresAt } = await getSessionWithId(context.get("id"));
+    expect(afterExpiresAt.getTime()).toBeGreaterThan(beforeExpiresAt.getTime() + WAIT_FOR);
   });
 
   it("should properly touch a key with a shorter expiry", async () => {
     await store.set(context.get("id"), context.get("data"));
     await waitFor(WAIT_FOR);
-    const { expires: beforeExpires } = await getSessionWithId(context.get("id"));
+    const { expiresAt: beforeExpiresAt } = await getSessionWithId(context.get("id"));
     const result = await store.touch(context.get("id"), Date.now() + SHORT_TTL * 1e3);
     expect(result).toBeUndefined();
-    const { expires: afterExpires } = await getSessionWithId(context.get("id"));
-    expect(afterExpires.getTime()).toBeLessThan(beforeExpires.getTime());
+    const { expiresAt: afterExpiresAt } = await getSessionWithId(context.get("id"));
+    expect(afterExpiresAt.getTime()).toBeLessThan(beforeExpiresAt.getTime());
   });
 });
