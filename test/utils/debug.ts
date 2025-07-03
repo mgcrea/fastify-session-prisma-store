@@ -1,4 +1,3 @@
-/* eslint-disable no-var */
 import { log } from "console";
 import { inspect } from "util";
 
@@ -8,9 +7,9 @@ declare global {
 }
 
 globalThis.d = (...args: unknown[]) => {
-  setImmediate(() =>
-    log("🔴 " + inspect(args.length > 1 ? args : args[0], { colors: true, depth: 10 }) + "\n"),
-  );
+  setImmediate(() => {
+    log("🔴 " + inspect(args.length > 1 ? args : args[0], { colors: true, depth: 10 }) + "\n");
+  });
 };
 globalThis.dd = (...args: unknown[]) => {
   const error = new Error();

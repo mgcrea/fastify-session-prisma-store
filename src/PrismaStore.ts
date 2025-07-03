@@ -65,7 +65,8 @@ export class PrismaStore<T extends SessionData = SessionData> extends EventEmitt
       },
     });
     return value?.data
-      ? [value.data as Prisma.JsonObject, value.expiresAt ? value.expiresAt.getTime() : null]
+      ? // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        [value.data as Prisma.JsonObject, value.expiresAt ? value.expiresAt.getTime() : null]
       : null;
   }
 
